@@ -43,5 +43,45 @@ class LoginTest extends TestCase
 
         $response->assertSessionHasErrors(['password' => 'パスワードを入力してください']);
     }
+
+    /**
+     * 入力情報が間違っている場合、バリデーションメッセージが表示される
+     */
+    public function test_ログイン情報が間違っている場合にエラーが表示される()
+    {
+        // ユーザーを一人作成しておく
+        $user = \App\Models\User::factory()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password', // 間違ったパスワード
+        ]);
+
+        $response->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません']);
+    }
+
+    /**
+     * 正しい情報が入力された場合、ログイン処理が実行される
+     */
+    public function test_正しい情報でログインできる()
+    {
+        $password = 'password123';
+        $user = \App\Models\User::factory()->create([
+            'password' => bcrypt($password),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password,
+        ]);
+
+        // 認証されていることを確認
+        $this->assertAuthenticatedAs($user);
+
+        // ログイン後のリダイレクト先（例：トップ画面など）を確認
+        $response->assertRedirect('/');
+    }
 }
 

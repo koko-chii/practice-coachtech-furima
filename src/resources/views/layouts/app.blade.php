@@ -8,6 +8,7 @@
     <title>coachtechフリマ</title>
 
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/flash-message.css') }}">
 
     @stack('css')
 </head>
@@ -67,5 +68,9 @@
     <main class="main">
         @yield('content')
     </main>
+
+    <script src="{{ asset('js/common.js') }}"></script>
+    @yield('scripts')
+
 </body>
 </html>

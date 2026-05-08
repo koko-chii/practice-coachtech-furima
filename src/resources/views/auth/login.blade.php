@@ -7,16 +7,14 @@
 @section('content')
 <div class="auth-container">
     <h1 class="auth-title">ログイン</h1>
-    <form action="{{ route('login') }}" method="POST" class="auth-form">
+    <form action="{{ route('login') }}" method="POST" class="auth-form"novalidate>
         @csrf
 
         <div class="form-group">
             <label for="email" class="form-label">メールアドレス</label>
             <input type="email" name="email" id="email" class="form-input" value="{{ old('email') }}">
             @error('email')
-                @if($message !== 'ログイン情報が登録されていません')
                     <p class="error-message">{{ $message }}</p>
-                @endif
             @enderror
         </div>
 
@@ -24,17 +22,9 @@
             <label for="password" class="form-label">パスワード</label>
             <input type="password" name="password" id="password" class="form-input">
             @error('password')
-                @if($message !== 'ログイン情報が登録されていません')
                     <p class="error-message">{{ $message }}</p>
-                @endif
             @enderror
         </div>
-
-        @error('email')
-            @if($message === 'ログイン情報が登録されていません')
-                <p class="error-message">{{ $message }}</p>
-            @endif
-        @enderror
 
         <div class="form-button">
             <button type="submit" class="btn-submit">ログインする</button>

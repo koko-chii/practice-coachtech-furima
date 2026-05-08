@@ -24,41 +24,67 @@ class LikeCommentTest extends TestCase
         ]);
     }
 
+    /* --- いいね機能のテスト --- */
+
     /** @test */
     public function test_いいねアイコンを押下して合計値が増加する()
     {
         $user = $this->createFullAccessUser();
         $item = Item::factory()->create();
 
-        // ルート定義に合わせて /like/{id}/like にPOST
         $response = $this->actingAs($user)->post("/like/{$item->id}/like");
 
-        // 成功のレスポンス（302または200）を確認
         $response->assertStatus($response->status() == 302 ? 302 : 200);
-        
-        // 【修正】テーブル名を likes に変更
+
         $this->assertDatabaseHas('likes', [
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
+        // 合計値が増加していることを確認
+        $this->assertEquals(1, $item->likedByUsers()->count());
     }
 
     /** @test */
-    public function test_いいねを解除すると合計値が減少する()
+    public function test_いいね済みのアイコンは色が変化している()
     {
         $user = $this->createFullAccessUser();
         $item = Item::factory()->create();
-        
-        // 最初からいいねしておく（DBに直接挿入）
+
+        // 先にいいねしておく
+        $user->likedItems()->attach($item->id);
+
+        $response = $this->actingAs($user)->get("/item/{$item->id}");
+
+        // 実装に合わせてクラス名などは調整してください（例: active-like）
+        $response->assertStatus(200);
+        $response->assertSee('like-count');
+    }
+
+    /** @test */
+    public function test_再度いいねアイコンを押下することによっていいねを解除できる()
+    {
+        $user = $this->createFullAccessUser();
+        $item = Item::factory()->create();
+
         $user->likedItems()->attach($item->id);
         $this->assertEquals(1, $item->likedByUsers()->count());
 
-        // 再度POSTして解除
         $response = $this->actingAs($user)->post("/like/{$item->id}/like");
 
         $response->assertStatus($response->status() == 302 ? 302 : 200);
         $this->assertEquals(0, $item->likedByUsers()->count());
     }
+
+    /** @test */
+    public function test_未ログインユーザーはいいねができない()
+    {
+        $item = Item::factory()->create();
+        $response = $this->post("/like/{$item->id}/like");
+
+        $response->assertRedirect('/login');
+    }
+
+    /* --- コメント機能のテスト --- */
 
     /** @test */
     public function test_ログイン済みのユーザーはコメントを送信できる()
@@ -73,7 +99,8 @@ class LikeCommentTest extends TestCase
         $response->assertStatus(302);
         $this->assertDatabaseHas('comments', [
             'comment' => 'テストコメントです',
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'item_id' => $item->id
         ]);
     }
 
@@ -90,6 +117,23 @@ class LikeCommentTest extends TestCase
     }
 
     /** @test */
+    public function test_コメントが空の場合はバリデーションエラーになる()
+    {
+        $user = $this->createFullAccessUser();
+        $item = Item::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->from("/item/{$item->id}")
+            ->post("/comment/{$item->id}/comment", [
+                'comment' => ''
+            ]);
+
+            $response->assertStatus(302);
+            $response->assertRedirect("/item/{$item->id}");
+            $response->assertSessionHasErrors(['comment']);
+    }
+
+    /** @test */
     public function test_255文字以上のコメントはバリデーションエラーになる()
     {
         $user = $this->createFullAccessUser();
@@ -102,5 +146,6 @@ class LikeCommentTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors(['comment']);
+        $response->assertRedirect("/item/{$item->id}");
     }
 }

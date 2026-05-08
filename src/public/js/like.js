@@ -15,18 +15,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Accept': 'application/json'
                 }
             })
+
             .then(response => {
                 if (response.status === 401) {
-                    alert('いいねするにはログインが必要です');
+                    window.location.href = '/login';
                     return;
                 }
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+
                 return response.json();
             })
+
             .then(data => {
                 if (data) {
-                    // 画像の切り替え
                     heartImg.src = data.is_liked ? '/img/liked.png' : '/img/HeartLogo.png';
-                    // カウントの更新
                     likeCount.textContent = data.like_count;
                 }
             })

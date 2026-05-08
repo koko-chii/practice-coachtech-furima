@@ -7,10 +7,10 @@
 @section('content')
 <div class="index-container">
     <div class="index-tabs">
-    <a href="/?{{ http_build_query(array_merge(request()->query(), ['tab' => null])) }}" 
+    <a href="/?{{ http_build_query(array_merge(request()->query(), ['tab' => null])) }}"
         class="tab-item {{ !request()->has('tab') ? 'active' : '' }}">おすすめ</a>
 
-    <a href="/?{{ http_build_query(array_merge(request()->query(), ['tab' => 'mylist'])) }}" 
+    <a href="/?{{ http_build_query(array_merge(request()->query(), ['tab' => 'mylist'])) }}"
         class="tab-item {{ request()->get('tab') == 'mylist' ? 'active' : '' }}">マイリスト</a>
 </div>
 

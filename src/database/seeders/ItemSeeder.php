@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ItemSeeder extends Seeder
 {
@@ -134,9 +136,17 @@ class ItemSeeder extends Seeder
             ],
         ];
 
-        // 5. 商品の保存とカテゴリーの紐付け
         foreach ($items as $itemData) {
             $item = Item::create($itemData);
+
+            $fileName = basename($itemData['img_url']);
+
+            // public/img/dummy にある画像を storage/app/public/items にコピー
+            File::copy(
+                public_path('img/dummy/' . $fileName),
+                storage_path('app/public/items/' . $fileName)
+            );
+            // --- ここまで ---
 
             // 商品名に応じて紐付けるカテゴリーを決める
             $targetNames = match ($item->name) {

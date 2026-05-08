@@ -7,6 +7,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Http\Requests\PurchaseRequest;
 
 class PurchaseController extends Controller
 {
@@ -26,18 +27,10 @@ class PurchaseController extends Controller
     }
 
     // 支払い方法選択機能：Stripeの決済画面に接続する
-    public function purchase(Request $request, $item_id)
+    public function purchase(PurchaseRequest $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
         $user = Auth::user();
-
-        // バリデーション：自分の商品、または売り切れ時は購入不可
-        if ($item->user_id === Auth::id()) {
-            return back()->with('error', '自分の商品は購入できません');
-        }
-        if ($item->is_sold) {
-            return back()->with('error', 'この商品は既に売り切れています');
-        }
 
         // Stripeの設定
         Stripe::setApiKey(config('services.stripe.secret'));

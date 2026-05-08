@@ -25,6 +25,51 @@ class RegisterTest extends TestCase
     }
 
     /**
+     * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
+     */
+    public function test_メールアドレスが未入力の場合にエラーが表示される()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テスト太郎',
+            'email' => '',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください']);
+    }
+
+    /**
+     * パスワードが入力されていない場合、バリデーションメッセージが表示される
+     */
+    public function test_パスワードが未入力の場合にエラーが表示される()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
+            'password' => '',
+            'password_confirmation' => '',
+        ]);
+
+        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください']);
+    }
+
+    /**
+     * パスワードが7文字以下の場合、バリデーションメッセージが表示される
+     */
+    public function test_パスワードが7文字以下の場合にエラーが表示される()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
+            'password' => 'pass123', // 7文字
+            'password_confirmation' => 'pass123',
+        ]);
+
+        $response->assertSessionHasErrors(['password' => 'パスワードは8文字以上で入力してください']);
+    }
+
+    /**
      * パスワードが確認用と一致しない場合、バリデーションメッセージが表示される
      */
     public function test_パスワードが一致しない場合にエラーが表示される()

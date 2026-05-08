@@ -111,8 +111,6 @@
     </div> {{-- detail-info END --}}
 </div> {{-- detail-container END --}}
 
-@section('scripts')
-    <script src="{{ asset('js/like.js') }}"></script>
-@endsection
+<script src="{{ asset('js/like.js') }}"></script>
 
 @endsection
