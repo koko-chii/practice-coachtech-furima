@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,13 +11,22 @@ class MyListTest extends TestCase
 {
     use RefreshDatabase;
 
+    /* =========================================================================
+     * マイリスト一覧取得
+     * ========================================================================= */
+
     /**
-     * 1. いいねした商品だけが表示される
+     * @testdox マイリスト一覧取得：いいねした商品だけが表示される
+     * 手順：1. ユーザーにログインをする 2. マイリストページを開く
+     * 期待値：いいねをした商品が表示される
      */
-    public function test_いいねした商品だけが表示される()
+    public function test_マイリスト一覧取得_いいねした商品だけが表示される(): void
     {
-        // ユーザーと、他人が出品した商品を作成
-        $user = User::factory()->create();
+        // 1. ユーザーにログインをする
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'postcode' => '123-4567'
+        ]);
         $otherUser = User::factory()->create();
 
         $likedItem = Item::create([
@@ -26,7 +35,7 @@ class MyListTest extends TestCase
             'description' => 'テスト',
             'condition' => '良好',
             'user_id' => $otherUser->id,
-            'img_url' => 'items/test1.jpg'
+            'img_url' => 'items/liked.jpg'
         ]);
 
         $notLikedItem = Item::create([
@@ -35,26 +44,33 @@ class MyListTest extends TestCase
             'description' => 'テスト',
             'condition' => '良好',
             'user_id' => $otherUser->id,
-            'img_url' => 'items/test2.jpg'
+            'img_url' => 'items/not-liked.jpg'
         ]);
 
-        // 【要調整】いいねのリレーション名（likes や favoriteItems など）
         $user->likedItems()->attach($likedItem->id);
 
-        // 【要調整】マイリストを表示するURL（例: /?page=mylist や /mylist など）
-        $response = $this->actingAs($user)->get('/?page=mylist');
+        // 2. マイリストページを開く
+        $response = $this->actingAs($user)->get('/?tab=mylist');
 
+        // 期待値：いいねをした商品が表示される
         $response->assertStatus(200);
         $response->assertSee('いいねした商品');
+        $response->assertSee('items/liked.jpg');
         $response->assertDontSee('いいねしていない商品');
     }
 
     /**
-     * 2. 購入済み商品は「Sold」と表示される
+     * @testdox マイリスト一覧取得：購入済み商品は「Sold」と表示される
+     * 手順：1. ユーザーにログインをする 2. マイリストページを開く 3. 購入済み商品を確認する
+     * 期待値：購入済み商品に「Sold」のラベルが表示される
      */
-    public function test_マイリストでも購入済み商品はSoldと表示される()
+    public function test_マイリスト一覧取得_購入済み商品はSoldと表示される(): void
     {
-        $user = User::factory()->create();
+        // 1. ユーザーにログインをする
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'postcode' => '123-4567'
+        ]);
         $otherUser = User::factory()->create();
 
         $soldItem = Item::create([
@@ -63,32 +79,32 @@ class MyListTest extends TestCase
             'description' => 'テスト',
             'condition' => '良好',
             'user_id' => $otherUser->id,
-            'img_url' => 'items/test3.jpg',
-            // 【要調整】売り切れを判定するカラム名や状態
+            'img_url' => 'items/sold.jpg',
             'is_sold' => true
         ]);
 
-        // いいねを付けてマイリストに載せる
         $user->likedItems()->attach($soldItem->id);
 
-        $response = $this->actingAs($user)->get('/?page=mylist');
+        // 2. マイリストページを開く
+        $response = $this->actingAs($user)->get('/?tab=mylist');
 
+        // 3. 購入済み商品を確認する -> 期待値：購入済み商品に「Sold」のラベルが表示される
         $response->assertStatus(200);
         $response->assertSee('Sold');
     }
 
     /**
-     * 3. 未認証の場合は何も表示されない
+     * @testdox マイリスト一覧取得：未認証の場合は何も表示されない
+     * 手順：1. マイリストページを開く
+     * 期待値：何も表示されない
      */
-    public function test_未ログイン状態ではマイリストに何も表示されない()
+    public function test_マイリスト一覧取得_未認証の場合は何も表示されない(): void
     {
-        // ログインせずにアクセス
-        $response = $this->get('/?page=mylist');
+        // 1. マイリストページを開く（未ログイン状態）
+        $response = $this->get('/?tab=mylist');
 
+        // 期待値：何も表示されない
         $response->assertStatus(200);
-
-        // 商品名が表示されるべき場所に、何も表示されていないことを確認
-        // （「いいねした商品」という文字列が画面に存在しないことを確認）
-        $response->assertDontSee('いいねした商品');
+        $response->assertDontSee('product-card'); // 商品カード等が描画されていないことを確認
     }
 }

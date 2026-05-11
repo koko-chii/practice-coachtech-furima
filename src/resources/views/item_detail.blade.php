@@ -108,9 +108,8 @@
                 </form>
             @endif
         </div>
-    </div> {{-- detail-info END --}}
-</div> {{-- detail-container END --}}
+    </div>
+</div>
 
 <script src="{{ asset('js/like.js') }}"></script>
-
 @endsection

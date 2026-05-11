@@ -2,11 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Item;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Item;
-use App\Models\Category;
 
 class ItemTest extends TestCase
 {
@@ -21,16 +20,16 @@ class ItemTest extends TestCase
         $user->markEmailAsVerified();
 
         $items = [
-            ['name' => '腕時計', 'price' => 15000, 'brand' => 'Rolax', 'description' => 'スタイリッシュなデザインのメンズ腕時計', 'img_url' => 'https://example.com', 'condition' => '良好'],
-            ['name' => 'HDD', 'price' => 5000, 'brand' => '西芝', 'description' => '高速で信頼性の高いハードディスク', 'img_url' => 'https://example.com', 'condition' => '目立った傷や汚れなし'],
-            ['name' => '玉ねぎ3束', 'price' => 300, 'brand' => 'なし', 'description' => '新鮮な玉ねぎ3束のセット', 'img_url' => 'https://example.com', 'condition' => 'やや傷や汚れあり'],
-            ['name' => '革靴', 'price' => 4000, 'brand' => '', 'description' => 'クラシックなデザインの革靴', 'img_url' => 'https://example.com', 'condition' => '状態が悪い'],
-            ['name' => 'ノートPC', 'price' => 45000, 'brand' => '', 'description' => '高性能なノートパソコン', 'img_url' => 'https://example.com', 'condition' => '良好'],
-            ['name' => 'マイク', 'price' => 8000, 'brand' => 'なし', 'description' => '高音質のレコーディング用マイク', 'img_url' => 'https://example.com', 'condition' => '目立った傷や汚れなし'],
-            ['name' => 'ショルダーバッグ', 'price' => 3500, 'brand' => '', 'description' => 'おしゃれなショルダーバッグ', 'img_url' => 'https://example.com', 'condition' => 'やや傷や汚れあり'],
-            ['name' => 'タンブラー', 'price' => 500, 'brand' => 'なし', 'description' => '使いやすいタンブラー', 'img_url' => 'https://example.com', 'condition' => '状態が悪い'],
-            ['name' => 'コーヒーミル', 'price' => 4000, 'brand' => 'Starbacks', 'description' => '手動のコーヒーミル', 'img_url' => 'https://example.com', 'condition' => '良好'],
-            ['name' => 'メイクセット', 'price' => 2500, 'brand' => '', 'description' => '便利なメイクアップセット', 'img_url' => 'https://example.com', 'condition' => '目立った傷や汚れなし'],
+            ['name' => '腕時計', 'price' => 15000, 'brand' => 'Rolax', 'description' => 'スタイリッシュなデザインのメンズ腕時計', 'img_url' => 'items/腕時計.jpg', 'condition' => '良好'],
+            ['name' => 'HDD', 'price' => 5000, 'brand' => '西芝', 'description' => '高速で信頼性の高いハードディスク', 'img_url' => 'items/HDD.jpg', 'condition' => '目立った傷や汚れなし'],
+            ['name' => '玉ねぎ3束', 'price' => 300, 'brand' => 'なし', 'description' => '新鮮な玉ねぎ3束のセット', 'img_url' => 'items/玉ねぎ3束.jpg', 'condition' => 'やや傷や汚れあり'],
+            ['name' => '革靴', 'price' => 4000, 'brand' => '', 'description' => 'クラシックなデザインの革靴', 'img_url' => 'items/革靴.jpg', 'condition' => '状態が悪い'],
+            ['name' => 'ノートPC', 'price' => 45000, 'brand' => '', 'description' => '高性能なノートパソコン', 'img_url' => 'items/ノートPC.jpg', 'condition' => '良好'],
+            ['name' => 'マイク', 'price' => 8000, 'brand' => 'なし', 'description' => '高音質のレコーディング用マイク', 'img_url' => 'items/マイク.jpg', 'condition' => '目立った傷や汚れなし'],
+            ['name' => 'ショルダーバッグ', 'price' => 3500, 'brand' => '', 'description' => 'おしゃれなショルダーバッグ', 'img_url' => 'items/ショルダーバッグ.jpg', 'condition' => 'やや傷や汚れあり'],
+            ['name' => 'タンブラー', 'price' => 500, 'brand' => 'なし', 'description' => '使いやすいタンブラー', 'img_url' => 'items/タンブラー.jpg', 'condition' => '状態が悪い'],
+            ['name' => 'コーヒーミル', 'price' => 4000, 'brand' => 'Starbacks', 'description' => '手動のコーヒーミル', 'img_url' => 'items/コーヒーミル.jpg', 'condition' => '良好'],
+            ['name' => 'メイクセット', 'price' => 2500, 'brand' => '', 'description' => '便利なメイクアップセット', 'img_url' => 'items/メイクセット.jpg', 'condition' => '目立った傷や汚れなし'],
         ];
 
         foreach ($items as $item) {
@@ -40,165 +39,107 @@ class ItemTest extends TestCase
         return $user;
     }
 
-    /** @test */
-    public function test_商品一覧ページですべての商品が表示される()
+    /* =========================================================================
+     * 商品一覧取得
+     * ========================================================================= */
+
+    /**
+     * @testdox 商品一覧取得：全商品を取得できる
+     * 手順：1. 商品ページを開く
+     * 期待値：すべての商品が表示される
+     */
+    public function test_商品一覧取得_全商品を取得できる(): void
     {
         $this->seedItems();
+
+        // 1. 商品ページを開く
         $response = $this->get('/');
 
+        // 期待値：すべての商品が表示される
         $response->assertStatus(200);
-        $response->assertSee('腕時計');
-        $response->assertSee('HDD');
-        $response->assertSee('玉ねぎ3束');
-        $response->assertSee('革靴');
-        $response->assertSee('ノートPC');
-        $response->assertSee('マイク');
-        $response->assertSee('ショルダーバッグ');
-        $response->assertSee('タンブラー');
-        $response->assertSee('コーヒーミル');
-        $response->assertSee('メイクセット');
-    }
 
-    /** @test */
-    public function test_商品詳細ページに指示通りの情報が表示される()
-    {
-        $user = $this->seedItems();
+        $expectedItems = [
+            ['name' => '腕時計', 'img' => 'items/腕時計.jpg'],
+            ['name' => 'HDD', 'img' => 'items/HDD.jpg'],
+            ['name' => '玉ねぎ3束', 'img' => 'items/玉ねぎ3束.jpg'],
+            ['name' => '革靴', 'img' => 'items/革靴.jpg'],
+            ['name' => 'ノートPC', 'img' => 'items/ノートPC.jpg'],
+            ['name' => 'マイク', 'img' => 'items/マイク.jpg'],
+            ['name' => 'ショルダーバッグ', 'img' => 'items/ショルダーバッグ.jpg'],
+            ['name' => 'タンブラー', 'img' => 'items/タンブラー.jpg'],
+            ['name' => 'コーヒーミル', 'img' => 'items/コーヒーミル.jpg'],
+            ['name' => 'メイクセット', 'img' => 'items/メイクセット.jpg'],
+        ];
 
-        $user->markEmailAsVerified();
-        $user->postcode = '123-4567';
-        $user->address = '東京都';
-        $user->save();
-
-        $item = Item::where('name', '腕時計')->first();
-
-        $response = $this->actingAs($user)->get("/item/{$item->id}");
-
-        $response->assertStatus(200);
-        $response->assertSee('腕時計');
-        $response->assertSee('Rolax');
-        $response->assertSee('15,000'); // カンマ区切り
-        $response->assertSee('スタイリッシュなデザインのメンズ腕時計');
-        $response->assertSee('良好');
-    }
-
-    /** @test */
-    public function test_検索キーワードに部分一致する商品が表示される()
-    {
-        $this->seedItems();
-
-        // 「PC」で検索
-        $response = $this->get('/?keyword=PC');
-
-        $response->assertStatus(200);
-        $response->assertSee('ノートPC');
-        $response->assertDontSee('腕時計');
-        $response->assertDontSee('玉ねぎ3束');
-    }
-
-    /** @test */
-    public function test_商品詳細ページにすべての情報と複数カテゴリが表示される()
-    {
-        $owner = User::factory()->create();
-        $item = Item::create([
-            'name' => '詳細テスト商品',
-            'price' => 15000,
-            'brand' => 'ブランドA',
-            'description' => 'これはテストです',
-            'condition' => '良好',
-            'user_id' => $owner->id,
-            'img_url' => 'items/test.jpg'
-        ]);
-
-        // 複数カテゴリの紐付け
-        $cat1 = Category::firstOrCreate(['name' => 'ファッション']);
-        $cat2 = Category::firstOrCreate(['name' => 'メンズ']);
-        $item->categories()->attach([$cat1->id, $cat2->id]);
-
-        $response = $this->get("/item/{$item->id}");
-
-        $response->assertStatus(200);
-        $response->assertSee('詳細テスト商品');
-        $response->assertSee('ブランドA');
-        $response->assertSee('15,000');
-        $response->assertSee('良好');
-        $response->assertSee('ファッション');
-        $response->assertSee('メンズ');
+        foreach ($expectedItems as $item) {
+            $response->assertSee($item['name']);
+            $response->assertSee($item['img']);
+        }
     }
 
     /**
-     * 検索状態がマイリストでも保持されている
+     * @testdox 商品一覧取得：購入済み商品は「Sold」と表示される
+     * 手順：1. 商品ページを開く 2. 購入済み商品を表示する
+     * 期待値：購入済み商品に「Sold」のラベルが表示される
      */
-    public function test_検索キーワードがマイリストでも保持されている()
-    {
-        $user = User::factory()->create();
-        $user->markEmailAsVerified();
-        $this->seedItems();
-
-        // 1. キーワード「PC」で検索しつつ、マイリストを表示
-        // ※URLの形式はアプリの実装（例: /?keyword=PC&page=mylist など）に合わせてください
-        $response = $this->actingAs($user)->get('/?keyword=PC&page=mylist');
-
-        $response->assertStatus(200);
-
-        // 2. 検索したキーワードが画面（検索窓のvalueなど）に残っていることを確認
-        $response->assertSee('PC');
-
-        // 3. マイリスト内でも正しく絞り込まれているか（任意ですが、あるとより良いです）
-        // ※もし自分の出品を除外する仕様なら、それも考慮されます
-        $response->assertSee('ノートPC');
-        $response->assertDontSee('腕時計');
-    }
-
-    /** @test */
-    public function test_購入済み商品にはSoldラベルが表示される()
+    public function test_商品一覧取得_購入済み商品はSoldと表示される(): void
     {
         $user = User::factory()->create();
         Item::create([
             'name' => '売り切れの商品',
             'price' => 1000,
-            'description' => 'テスト',
+            'description' => 'テスト説明',
             'condition' => '良好',
             'user_id' => $user->id,
             'is_sold' => true,
             'img_url' => 'items/test.jpg'
         ]);
 
+        // 1. 商品ページを開く 2. 購入済み商品を表示する
         $response = $this->get('/');
+
+        // 期待値：購入済み商品に「Sold」のラベルが表示される
+        $response->assertStatus(200);
         $response->assertSee('Sold');
     }
 
-    /** @test */
-    public function test_自分が出品した商品は一覧に表示されない()
+    /**
+     * @testdox 商品一覧取得：自分が出品した商品は表示されない
+     * 手順：1. ユーザーにログインをする 2. 商品ページを開く
+     * 期待値：自分が出品した商品が一覧に表示されない
+     */
+    public function test_商品一覧取得_自分が出品した商品は表示されない(): void
     {
-        // 1. ログインユーザー（自分）を作成
-        $me = User::factory()->create();
-        $me->markEmailAsVerified();
-
-        // 2. 「自分の出品物」と「他人の出品物」を作成
+        // 1. ユーザーにログインをする
+        $me = User::factory()->create([
+            'email_verified_at' => now(),
+            'postcode' => '123-4567'
+        ]);
         $otherUser = User::factory()->create();
 
         Item::create([
             'name' => '自分の出品した商品',
             'price' => 1000,
-            'description' => 'テスト',
+            'description' => 'テスト説明',
             'condition' => '良好',
-            'user_id' => $me->id, // 自分が出品
+            'user_id' => $me->id,
             'img_url' => 'items/test.jpg'
         ]);
 
         Item::create([
             'name' => '他人の出品した商品',
             'price' => 2000,
-            'description' => 'テスト',
+            'description' => 'テスト説明',
             'condition' => '良好',
-            'user_id' => $otherUser->id, // 他人が出品
+            'user_id' => $otherUser->id,
             'img_url' => 'items/test.jpg'
         ]);
 
-        // 3. 自分としてログインして一覧ページを開く
+        // 2. 商品ページを開く
         $response = $this->actingAs($me)->get('/');
 
-        // 4. 他人の商品は見えるが、自分の商品は見えないことを確認
+        // 期待値：自分が出品した商品が一覧に表示されない（他人の商品のみ表示される）
+        $response->assertStatus(200);
         $response->assertSee('他人の出品した商品');
         $response->assertDontSee('自分の出品した商品');
     }

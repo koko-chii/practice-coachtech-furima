@@ -29,8 +29,8 @@ class ItemSeeder extends Seeder
 
         // 2. カテゴリーの作成（全14項目）
         $categories = [
-            'ファッション', '家電', 'インテリア', 'レディース', 'メンズ', 
-            'コスメ', '本', 'ゲーム', 'スポーツ', 'キッチン', 
+            'ファッション', '家電', 'インテリア', 'レディース', 'メンズ',
+            'コスメ', '本', 'ゲーム', 'スポーツ', 'キッチン',
             'ハンドメイド', 'アクセサリー', 'おもちゃ', 'ベビー・キッズ'
         ];
 
@@ -135,6 +135,12 @@ class ItemSeeder extends Seeder
                 'user_id' => $user->id,
             ],
         ];
+
+        // コピー先のディレクトリを自動作成（エラー防止）
+        $targetDirectory = storage_path('app/public/items');
+        if (!File::isDirectory($targetDirectory)) {
+            File::makeDirectory($targetDirectory, 0755, true, true);
+        }
 
         foreach ($items as $itemData) {
             $item = Item::create($itemData);

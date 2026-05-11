@@ -28,7 +28,7 @@ class ItemController extends Controller
 
         if ($tab === 'mylist') {
             if ($user) {
-                $query = $user->likedItems();
+                $query = $user->likedItems()->where('items.user_id', '!=', $user->id);
             } else {
                 $query->where('id', 0);
             }

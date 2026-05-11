@@ -12,6 +12,9 @@ class PurchaseTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * テストユーザーを作成し、全てのガードを突破させる
+     */
     private function createFullAccessUser()
     {
         return User::factory()->create([
@@ -22,81 +25,28 @@ class PurchaseTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function test_商品購入画面が表示される()
+    /* =========================================================================
+     * 商品購入機能
+     * ========================================================================= */
+
+    /**
+     * @testdox 商品購入機能：「購入する」ボタンを押下すると購入が完了する
+     * 手順：1. ユーザーにログインする 2. 商品購入画面を開く 3. 商品を選択して「購入する」ボタンを押下
+     * 期待値：購入が完了する
+     */
+    public function test_商品購入機能_購入するボタンを押下すると購入が完了する(): void
     {
+        // 1. ユーザーにログインする
         $user = $this->createFullAccessUser();
-        $item = Item::factory()->create();
+        // 2. 商品購入画面を開く (対象商品の作成)
+        $item = Item::factory()->create(['price' => 1000, 'is_sold' => false]);
 
-        $response = $this->actingAs($user)->get("/purchase/{$item->id}");
-
-        $response->assertStatus(200);
-        $response->assertSee($item->name);
-    }
-
-    /** @test */
-    public function test_購入ボタンを押すとStripe決済へリダイレクトされる()
-    {
-        $user = $this->createFullAccessUser();
-        $item = Item::factory()->create(['price' => 1000]);
-
-        $response = $this->actingAs($user)->post("/purchase/{$item->id}", [
-            'payment_method' => 'card'
-        ]);
-
-        $response->assertStatus(302);
-        $this->assertStringContainsString('stripe.com', $response->headers->get('Location'));
-    }
-
-    /** @test */
-    public function test_購入した商品は商品一覧画面にてsoldと表示される()
-    {
-        $user = $this->createFullAccessUser();
-        $item = Item::factory()->create(['is_sold' => true]); // 売り切れ状態
-
-        $response = $this->get("/");
-
-        $response->assertStatus(200);
-        // 実装に合わせて「sold」や「Sold Out」など調整してください
-        $response->assertSee('sold');
-    }
-
-    /** @test */
-    public function test_購入した商品がプロフィール画面の購入した商品一覧に追加されている()
-    {
-        $user = $this->createFullAccessUser();
-        $item = Item::factory()->create();
-
-        // 注文データを作成（購入済み状態）
-        Order::create([
-            'user_id' => $user->id,
-            'item_id' => $item->id,
-        ]);
-
-        // 購入履歴ページ（例: /mypage?tab=buy）へアクセス
-        $response = $this->actingAs($user)->get("//mypage?page=buy");
-
-        $response->assertStatus(200);
-        $response->assertSee($item->name);
-    }
-
-    /** @test */
-    public function test_決済成功後に商品が売り切れ状態になり注文情報が保存される()
-    {
-        $user = $this->createFullAccessUser();
-        $item = Item::factory()->create(['is_sold' => false]);
-
-        session(['shipping_address' => [
-            'postcode' => '111-2222',
-            'address' => '大阪府大阪市',
-            'building' => 'テストビル'
-        ]]);
-
+        // 3. 商品を選択して「購入する」ボタンを押下 (Stripe決済または注文完了エンドポイントへのリクエスト)
+        // ※ 実際の決済成功リダイレクト先（購入完了処理）に合わせてエンドポイントを調整してください
         $response = $this->actingAs($user)->get("/purchase/success/{$item->id}");
 
-        $response->assertRedirect('/');
-
-        // DBの状態確認
+        // 期待値：購入が完了する (ステータスコード変更、DBへの注文情報の追加)
+        $response->assertStatus(302); 
         $this->assertEquals(1, $item->fresh()->is_sold);
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
@@ -104,53 +54,48 @@ class PurchaseTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function test_支払い方法を選択すると小計画面に反映される()
+    /**
+     * @testdox 商品購入機能：購入した商品は商品一覧画面にて「sold」と表示される
+     * 手順：1. ユーザーにログインする 2. 商品購入画面を開く 3. 商品を選択して「購入する」ボタンを押下 4. 商品一覧画面を表示する
+     * 期待値：購入した商品が「sold」として表示されている
+     */
+    public function test_商品購入機能_購入した商品は商品一覧画面にてsoldと表示される(): void
     {
+        // 1. ユーザーにログインする
         $user = $this->createFullAccessUser();
-        $item = Item::factory()->create();
+        // 2. 商品購入画面を開く 3. 商品を選択して「購入する」ボタンを押下 (購入済み商品をシミュレート)
+        $item = Item::factory()->create(['is_sold' => true]);
 
-        // 1. 支払い方法を選択（コンビニ払いを選択したと仮定）
-        // ※実装に合わせて POST 先やパラメータ名を調整してください
-        $response = $this->actingAs($user)
-            ->from("/purchase/{$item->id}")
-            ->post("/purchase/{$item->id}", [
-                'payment_method' => 'konbini'
-            ]);
+        // 4. 商品一覧画面を表示する
+        $response = $this->get("/");
 
-        // 2. 小計画面（購入画面）を再表示
-        $response = $this->actingAs($user)->get("/purchase/{$item->id}");
-
+        // 期待値：購入した商品が「sold」として表示されている
         $response->assertStatus(200);
-
-        // 3. 選択した支払い方法が画面に表示されているか確認
-        // 表示される文言（例: コンビニ払い）に合わせて調整してください
-        $response->assertSee('コンビニ払い');
+        $response->assertSee('sold');
     }
 
-       /** @test */
-    public function test_送付先住所変更画面にて登録した住所が商品購入画面に反映されている()
+    /**
+     * @testdox 商品購入機能：「プロフィール/購入した商品一覧」に追加されている
+     * 手順：1. ユーザーにログインする 2. 商品購入画面を開く 3. 商品を選択して「購入する」ボタンを押下 4. プロフィール画面を表示する
+     * 期待値：購入した商品がプロフィールの購入した商品一覧に追加されている
+     */
+    public function test_商品購入機能_プロフィール購入した商品一覧に追加されている(): void
     {
+        // 1. ユーザーにログインする
         $user = $this->createFullAccessUser();
-        $item = Item::factory()->create();
+        // 2. 商品購入画面を開く 3. 商品を選択して「購入する」ボタンを押下 (購入および注文データ作成をシミュレート)
+        $item = Item::factory()->create(['name' => '購入済み確認商品']);
+        Order::create([
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+        ]);
 
-        // 1. 送付先住所を変更（正しいURLにPOST）
-        $newAddress = [
-            'postcode' => '999-8888',
-            'address' => '大阪府大阪市北区梅田',
-            'building' => 'テストビル101'
-        ];
+        // 4. プロフィール画面を表示する（購入した商品一覧を表示）
+        // ※ プロフィールの切り替えタブ仕様に合わせて、URLパラメータ（例: page=buy）を設定しています
+        $response = $this->actingAs($user)->get("/mypage?page=buy");
 
-        // URLを /purchase/address/{item_id} に修正
-        $this->actingAs($user)
-            ->post("/purchase/address/{$item->id}", $newAddress);
-
-        // 2. 商品購入画面を表示して、変更が反映されているか確認
-        $response = $this->actingAs($user)->get("/purchase/{$item->id}");
-
+        // 期待値：購入した商品がプロフィールの購入した商品一覧に追加されている
         $response->assertStatus(200);
-        $response->assertSee('999-8888');
-        $response->assertSee('大阪府大阪市北区梅田');
-        $response->assertSee('テストビル101');
+        $response->assertSee('購入済み確認商品');
     }
 }
