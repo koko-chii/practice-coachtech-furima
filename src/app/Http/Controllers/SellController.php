@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\ExhibitionRequest;
 
 class SellController extends Controller
 {
@@ -16,7 +16,7 @@ class SellController extends Controller
         return view('item_sell', compact('categories'));
     }
 
-    public function store(StoreItemRequest $request)
+    public function store(ExhibitionRequest $request)
     {
         $path = null;
         if ($request->hasFile('img_url')) {
