@@ -1,88 +1,102 @@
+/* 商品一覧画面全体の囲み枠：最大幅を1200pxに制限し、大きな画面でも綺麗に中央寄せする */
 .index-container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* 画面上のタブ切り替えエリア（おすすめ／マイリスト）：2つのタブを横並びにして下線を引く */
 .index-tabs {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 30px;
+    display: flex; /* タブを綺麗に横一列に並べる */
+    border-bottom: 1px solid #ddd; /* 下側に薄いグレーの区切り線を1本引く */
+    margin-bottom: 30px; /* 下にある商品リストとの間に30pxの十分な空間をあける */
 }
 
+/* 各タブ共通の文字ルール：太字でリンクの下線を消し、クリックしやすい広めの余白をとる */
 .tab-item {
     padding: 15px 30px;
-    text-decoration: none;
+    text-decoration: none; /* リンク特有のアンダーライン（下線）を消す */
     color: #333;
     font-weight: bold;
     font-size: 16px;
-    transition: color 0.3s;
+    transition: color 0.3s; /* マウスを乗せた時に、0.3秒かけてフワッと文字色を変える演出 */
 }
 
+/* 今選択されているアクティブなタブ（おすすめ等）：文字をブランドカラーの赤ピンクに変える */
 .tab-item.active {
     color: #ff5a5f;
-    position: relative;
+    position: relative; /* 次の「::after」で下に引く赤い線を、このタブの横幅に合わせるための基準点 */
 }
 
+/* アクティブなタブの真下に引く、おしゃれな赤い下線（アニメーションや装飾用の大技） */
 .tab-item.active::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
+    content: ""; /* 画面には映らない「見えない文字」を作り出し、これを2pxの線に変形させる命令 */
+    position: absolute; /* タブの枠の下側にピタッと浮かせて重ねる設定 */
+    bottom: -1px; /* 親の区切り線（-1px）にピッタリ重なる位置に調整 */
     left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #ff5a5f;
+    width: 100%; /* タブの文字の長さ（横幅）に合わせて、自動で100%の長さに伸びるようにする */
+    height: 2px; /* 線の太さを2pxにする */
+    background-color: #ff5a5f; /* 線の色をブランドカラーの赤ピンクにする */
 }
 
+/* 商品を網の目（グリッド）状に並べる最重要エリア：タイル状の配置を全自動で計算させる魔法の設定 */
 .product-grid {
-    display: grid;
+    display: grid; /* 格子状（タイル並び）に部品を配置する命令 */
+    /* 画面幅に合わせて「最低200pxのカード」を、入るだけ横に自動で並べ（auto-fill）、余った隙間は均等に分配する（1fr）という超便利設定 */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 40px 20px;
+    gap: 40px 20px; /* カード同士の間隔を設定：上下の隙間は40px、左右の隙間は20pxにする */
     padding: 20px;
 }
 
+/* 各商品カード全体：タップ（クリック）できるようにリンク化し、中の文字色を揃える */
 .product-card {
     text-decoration: none;
     color: #333;
 }
 
+/* 商品画像を包む枠：どんな画像が来ても「絶対に綺麗な正方形」を保つための賢い設定 */
 .product-image-wrapper {
-    aspect-ratio: 1 / 1;
-    background-color: #d9d9d9;
+    aspect-ratio: 1 / 1; /* 縦横の比率を「1対1（完全な正方形）」に強制固定する超強力なプロパティ */
+    background-color: #d9d9d9; /* 画像が読み込まれるまでの間、薄いグレーの背景を表示しておく */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; /* 万が一画像が正方形じゃない場合でも、上下中央に配置する */
+    justify-content: center; /* 左右中央に配置する */
     font-size: 20px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    position: relative;
+    margin-bottom: 10px; /* 下にある商品名とくっつかないように10pxの隙間をあける */
+    overflow: hidden; /* 正方形の枠からはみ出た画像部分を綺麗にカットする */
+    position: relative; /* 左上に浮かせる「SOLDバッジ」の位置を決めるための基準点 */
 }
 
+/* 実際に表示する商品画像：縦横比を壊さずに正方形の枠いっぱいに広げる */
 .product-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* 画像が縦長や横長でも、歪ませずに正方形の枠いっぱいに拡大フィットさせる */
 }
 
+/* 商品名（タイトル）：文字サイズを調整し、余計な隙間をリセット */
 .product-name {
     font-size: 14px;
     margin: 0;
 }
 
+/* 商品が売り切れた時に、画像の左上に重なって現れる「SOLD」バッジ */
 .sold-badge {
-    position: absolute;
+    position: absolute; /* 画像の枠（wrapper）の左上（top:0, left:0）を基準にして浮かせる設定 */
     top: 0;
     left: 0;
-    background-color: #ff5a5f;
-    color: white;
+    background-color: #ff5a5f; /* バッジ全体をパッと目を引く赤ピンク色にする */
+    color: white; /* 中の「SOLD」の文字を白にして読みやすくする */
     padding: 4px 12px;
     font-weight: bold;
     font-size: 14px;
-    z-index: 5;
-    border-bottom-right-radius: 4px;
+    z-index: 5; /* 商品画像よりも必ず手前（上）に重なって表示されるようにする優先順位 */
+    border-bottom-right-radius: 4px; /* バッジの右下の角だけをほんのり丸くして馴染ませる */
 }
 
+/* 【スマホ対応】画面の横幅が600px以下（スマホサイズ）になった時の限定ルール */
 @media (max-width: 600px) {
+    /* 画面が狭いスマホでは、全自動並びをやめて「1行にピッタリ2件ずつ」綺麗に並べる設定に切り替える */
     .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* 画面の横幅を真っ二つ（2分割）にして均等に並べる */
     }
 }

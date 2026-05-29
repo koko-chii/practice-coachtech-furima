@@ -1,114 +1,130 @@
+/* プロフィール編集画面全体の囲み枠：中央に配置し、最大幅を600pxに制限して見やすくする */
 .profile-edit-container {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 0 20px;
-    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    margin: 20px auto; /* 上下に20pxの隙間をあけ、左右は「auto」で完全に中央寄せにする */
+    padding: 0 20px; /* スマホ画面になった時に、左右が端に張り付かないための隙間 */
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; /* さまざまなパソコンやスマホで綺麗に見えるゴシック体のフォント指定 */
 }
 
+/* ページタイトル（「プロフィール設定」などの文字）：中央寄せで大きく太字にする */
 .page-title {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* 下に入力フォームが来るため、30pxの広めの空間をあける */
 }
 
+/* プロフィール入力フォーム：中にある入力欄をすべて「縦一列」にまっすぐ並べる設定 */
 .profile-form {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* 中身を上から下へ縦並びにする命令 */
 }
 
+/* 画像アップロードエリア：丸いプレビュー画像と選択ボタンを横並びにして中央に配置 */
 .image-upload-section {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
+    align-items: center; /* プレビュー画像とボタンの「縦の中央」を綺麗に揃える */
+    justify-content: center; /* 左右の真ん中（中央）に配置する */
+    gap: 30px; /* 画像とボタンの間に30pxの適度な隙間をあける */
     margin-bottom: 20px;
 }
 
+/* 画像のプレビュー枠（外枠）：100px四方の正方形を作り、綺麗な「真ん丸」にくり抜く設定 */
 .image-preview {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
-    background-color: #ddd;
-    overflow: hidden;
+    border-radius: 50%; /* 四隅を50%丸めることで、四角い箱を「完全な丸型」に変形させる */
+    background-color: #ddd; /* 画像が入る前は、薄いグレーの背景色にしておく */
+    overflow: hidden; /* 丸い枠からはみ出た四角い画像の四隅を、綺麗にカットして非表示にする */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* 実際にセットされたプロフィール画像：枠の中に隙間なく綺麗に収める設定 */
 #profile-preview {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* 縦横比を崩さずに、100pxの丸い枠いっぱいに画像を広げてフィットさせる */
 }
 
-/* 画像がセットされるまで非表示にする */
+/* 画像がセットされるまで非表示にするための裏方クラス：JavaScriptなどで付け外しする */
 .hidden {
-    display: none;
+    display: none; /* 画面上から完全に消し去り、存在しない状態にする */
 }
 
+/* プレビュー枠の中にある画像タグ（保険設定）：こちらも枠いっぱいに綺麗に収まるように指定 */
 .image-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* 「画像を選択する」ボタン：赤ピンク色の枠線で囲ったスタイリッシュなボタン */
 .image-select-btn {
-    color: #ff5a5f;
-    border: 1px solid #ff5a5f;
+    color: #ff5a5f; /* 文字の色をフリマアプリ特有の赤ピンクにする */
+    border: 1px solid #ff5a5f; /* ボタンの周りに同じ赤ピンクの線を1本の太さで引く */
     padding: 8px 16px;
     border-radius: 4px;
-    cursor: pointer;
+    cursor: pointer; /* マウスが乗った時に「指差しマーク」にする */
     font-size: 14px;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s; /* マウスが乗った時、0.3秒かけて滑らかに色を変える演出 */
 }
 
+/* 画像選択ボタンにマウスが乗った時（ホバー）：背景をほんのり薄いピンク色に変える */
 .image-select-btn:hover {
-    background-color: #fff5f5;
+    background-color: #fff5f5; /* 視覚的に「今このボタンを選んでいる」と伝える優しい色 */
 }
 
+/* 各入力項目のまとまり（名前、郵便番号などの1ブロック）：下に12pxの隙間をあけて次へ繋ぐ */
 .form-group {
     margin-bottom: 12px;
 }
 
+/* 入力項目のタイトルラベル（「ユーザー名」などの文字）：太字にして入力欄の上に配置 */
 .form-group label {
-    display: block;
+    display: block; /* 縦並びにするために、横幅いっぱいのブロック要素に切り替える */
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 4px; /* 下にある入力の箱との間に4pxの少しの隙間をあける */
     font-size: 16px;
 }
 
+/* 文字を入力する白い四角い箱（インプット欄）：横幅いっぱいに広げ、押しやすく広めの余白をとる */
 .form-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
+    padding: 12px; /* 箱の内側に12pxの広い余白をとり、文字を打ちやすく、タップしやすくする */
+    border: 1px solid #ccc; /* 主張しすぎない薄いグレーの枠線を引く */
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box; /* padding（内側の余白）を増やしても、全体の横幅が100%からはみ出ないようにするお守り */
     font-size: 16px;
 }
 
+/* 更新する（変更を保存する）ボタン：画面の一番下で、横幅いっぱいに目立たせる赤ピンクのボタン */
 .submit-btn {
     width: 100%;
-    padding: 15px;
-    background-color: #ff5a5f;
-    color: white;
+    padding: 15px; /* 上下に15pxの広い余白をとり、親指で押しやすい大きなボタンにする */
+    background-color: #ff5a5f; /* ボタン全体を鮮やかな赤ピンク色にする */
+    color: white; /* 中の文字を白にして、ハッキリと読みやすくする */
     border: none;
     border-radius: 4px;
-    font-size: 18px;
+    font-size: 18px; /* パッと目を引くように少し大きめの文字サイズにする */
     font-weight: bold;
     cursor: pointer;
-    margin-top: 20px;
-    transition: opacity 0.3s;
+    margin-top: 20px; /* 上の入力欄とくっつかないように、20pxの空間をあける */
+    transition: opacity 0.3s; /* マウスが乗った時、0.3秒かけて滑らかに透明度を変える演出 */
 }
 
+/* 更新ボタンにマウスが乗った時（ホバー）：少しだけ透明にして「押せる状態」を表現 */
 .submit-btn:hover {
-    opacity: 0.8;
+    opacity: 0.8; /* ボタンの明るさ（不透明度）を80%に落とし、フワッと光ったような見た目にする */
 }
 
+/* 【スマホ対応】画面の横幅が480px以下（一般的なスマホサイズ）になった時のレスポンスルール */
 @media screen and (max-width: 480px) {
+    /* 横並びだったプレビュー画像とボタンを、スマホ画面に収めるために「縦並び」に切り替える */
     .image-upload-section {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: column; /* 縦一列の並び順に変更 */
+        gap: 15px; /* 縦の隙間を15pxに縮める */
     }
 }

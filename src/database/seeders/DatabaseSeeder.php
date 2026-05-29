@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
+
+    //アプリ起動した直後、開発者やテストユーザーがすぐログインして動作確認できるよう
+    // データーベースに1件テストアカウントを確実に用意するための記述
     public function run(): void
     {
         User::updateOrCreate(
@@ -22,7 +25,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. その後に商品データを入れる処理（ItemSeeder）を呼び出す
+        // 商品の初期データを入れる処理（ItemSeeder）を呼び出す
         $this->call([
             ItemSeeder::class,
         ]);

@@ -9,6 +9,9 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    //コメントが書かれたときデーターベースに保存するため、
+    // ユーザー情報・対象商品情報、コメント255字内、コメント日時の項目を
+    // 新しく保存した設計図
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
@@ -23,6 +26,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+
+    //やり直しが必要な場合、コメントテーブル設計図を削除し元に戻す記述
     public function down(): void
     {
         Schema::dropIfExists('comments');

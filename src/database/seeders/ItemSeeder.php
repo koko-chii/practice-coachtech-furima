@@ -18,31 +18,33 @@ class ItemSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. リセット処理（既存のデータとIDのカウントをリセット）
+        //リセット処理（既存のデータとIDのカウントをリセット）
         Schema::disableForeignKeyConstraints();
         DB::table('category_item')->truncate();
         Item::truncate();
         Schema::enableForeignKeyConstraints();
 
-        // テストユーザーの取得（紐付け用）
+        //テストユーザーの取得（紐付け用）
         $user = User::where('email', 'test@example.com')->first();
 
-        // 2. カテゴリーの作成（全14項目）
+        //カテゴリーの作成（全14項目）
         $categories = [
             'ファッション', '家電', 'インテリア', 'レディース', 'メンズ',
             'コスメ', '本', 'ゲーム', 'スポーツ', 'キッチン',
             'ハンドメイド', 'アクセサリー', 'おもちゃ', 'ベビー・キッズ'
         ];
 
+        //カテゴリー名を1つずつ取り出して新しく登録する
+        // という安全なループ処理です
         foreach ($categories as $cat) {
             Category::firstOrCreate(['name' => $cat]);
         }
 
-        // 3. 【重要】カテゴリーの名簿（名前とIDのペア）を作成
+        //カテゴリーの名簿（名前とIDのペア）を作成
         // これを商品登録より先に書くことで、紐付けが成功します
         $categoryMap = Category::pluck('id', 'name');
 
-        // 4. 商品データの定義（指示書の内容通り）
+        //商品データの定義（指示書の内容通り）
         $items = [
             [
                 'name' => '腕時計',
@@ -142,6 +144,8 @@ class ItemSeeder extends Seeder
             File::makeDirectory($targetDirectory, 0755, true, true);
         }
 
+        //複数の商品データを上から順番に1件ずつデータベースへ保存（登録）し
+        // 画像URLからファイル名だけの部分を抜き出している記述です
         foreach ($items as $itemData) {
             $item = Item::create($itemData);
 
@@ -152,7 +156,6 @@ class ItemSeeder extends Seeder
                 public_path('img/dummy/' . $fileName),
                 storage_path('app/public/items/' . $fileName)
             );
-            // --- ここまで ---
 
             // 商品名に応じて紐付けるカテゴリーを決める
             $targetNames = match ($item->name) {

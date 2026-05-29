@@ -1,205 +1,224 @@
 /* =========================================
-   全体レイアウト
-   ========================================= */
+商品詳細画面全体レイアウト
+========================================= */
+/* 画面全体の囲み枠：最大幅を1000pxに制限し、左右に50pxの広い空間をとって見やすく並べる */
 .detail-container {
     max-width: 1000px;
-    margin: 40px auto;
-    display: flex;
-    gap: 50px;
-    padding: 0 20px;
+    margin: 40px auto; /* 上下に40pxの余白をあけ、左右は自動で中央寄せにする */
+    display: flex; /* 左側（画像）と右側（詳細情報）を綺麗に横並びにする魔法の命令 */
+    gap: 50px; /* 画像と詳細情報の間に50pxのゆったりとした隙間をあける */
+    padding: 0 20px; /* スマホ画面になった時に左右が端に張り付くのを防ぐ余白 */
 }
 
-/* 共通設定：幅の計算を統一（ボタンのズレを直す） */
-.btn-purchase, 
+/* 共通設定：ボタンや入力エリアのサイズ計算を統一し、横幅が綺麗に揃うようにする */
+.btn-purchase,
 .btn-comment-submit,
 .comment-textarea {
-    box-sizing: border-box;
-    width: 100%;
+    box-sizing: border-box; /* 内側の余白（padding）や線を増やしても、横幅100%からはみ出さないようにするお守り */
+    width: 100%; /* 横幅いっぱいに広げてボタンの長さをきれいに統一する */
 }
 
 /* =========================================
-   左側：商品画像
-   ========================================= */
+左側：商品画像エリア
+========================================= */
+/* 画像を包む外枠：横幅を均等に半分（flex: 1）にしつつ、最大でも500pxまでに制限 */
 .detail-image {
-    flex: 1;
+    flex: 1; /* 右側のテキストエリアと5対5の等しい比率で画面幅を分け合う設定 */
     max-width: 500px;
 }
 
+/* 実際の商品画像：枠から絶対にはみ出さず、縦横比を綺麗に保つ */
 .detail-image img {
     width: 100%;
-    height: auto;
-    object-fit: contain;
-    background-color: #f9f9f9;
+    height: auto; /* 画像が潰れたり伸びたりしないように縦幅は自動調整にする */
+    object-fit: contain; /* 横長や縦長の画像が来ても、見切れることなく枠の中に綺麗に収める */
+    background-color: #f9f9f9; /* 背景に薄いグレーを敷いて、白い画像が背景に溶けるのを防ぐ */
 }
 
 /* =========================================
-   右側：商品情報
-   ========================================= */
+右側：商品情報エリア
+========================================= */
+/* 商品情報を包む枠：縦に上から順に要素を並べる */
 .detail-info {
-    flex: 1;
+    flex: 1; /* 左側の画像エリアと等しい比率で画面幅を分け合う設定 */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* 中身の商品名や価格を、上から下へまっすぐ縦並びにする命令 */
 }
 
+/* 商品タイトル：文字を大きく、太字にして目立たせる */
 .detail-name {
     font-size: 28px;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
+/* ブランド名：文字を小さくし、主張しすぎないグレー（#666）にする */
 .detail-brand {
     font-size: 16px;
     color: #666;
     margin-bottom: 15px;
 }
 
+/* 価格：大きな太字でパッと一番に目がいくようにする */
 .detail-price {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 25px;
 }
 
+/* 価格の横にある「（税込）」などの補足文字：標準の太さに戻して少し小さく並べる */
 .detail-price span {
     font-size: 14px;
-    font-weight: normal;
-    margin-left: 5px;
+    font-weight: normal; /* 価格の太字を引き継がずに、普通の太さに戻す設定 */
+    margin-left: 5px; /* 金額の数字とくっつかないように左側に5pxの隙間をあける */
 }
 
 /* =========================================
-   アクション（いいね・コメントアイコン）
-   ========================================= */
+アクション（いいね・コメントアイコン）
+========================================= */
+/* アイコン全体の並び方：いいねボタンとコメントボタンを横一列に並べる */
 .detail-actions {
     display: flex;
-    align-items: flex-start;
-    gap: 30px;
+    align-items: flex-start; /* アイコンの頭（上端）を綺麗に揃えて配置する */
+    gap: 30px; /* いいねとコメントの間に30pxの隙間をあける */
     margin-bottom: 20px;
 }
 
-/* アイコンと数字を一つの縦列として中央揃えにする */
+/* 各アイコン単体の縦の並び：アイコンの下に数字が綺麗に中央寄せで配置されるようにする */
 .action-item, .action-group {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 40px;
+    flex-direction: column; /* 上にアイコン、下に数字という縦の並び順にする */
+    align-items: center; /* 縦並びにした中身を、綺麗に左右中央寄せにする */
+    width: 40px; /* 横幅を40pxに固定して配置を安定させる */
     text-align: center;
 }
 
-/* ボタンやアイコンを包む枠の高さを固定して横を揃える */
+/* アイコンを包む透明なボタン枠：余計な線を消し、高さを統一してガタつきを防ぐ */
 .action-btn, .like-button, .icon-wrapper {
-    background: none;
-    border: none;
-    cursor: pointer;
+    background: none; /* ボタン特有の背景色を透明にする */
+    border: none; /* 周りの枠線を消し去る */
+    cursor: pointer; /* マウスが乗った時に「指差しマーク」に変えて押せることを伝える */
     padding: 0;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 35px; /* アイコンの頭を揃えるための固定高 */
+    height: 35px; /* 異なる形のアイコンでも、頭がズレないように高さを35pxに固定する */
 }
 
-/* アイコン自体のサイズ */
+/* ハートや吹き出しのアイコン画像自体のサイズ：32pxで綺麗に大きさを揃える */
 .heart-icon, .comment-icon, .action-icon, .action-btn img {
     width: 32px;
     height: auto;
 }
 
-/* アイコン下の数字 */
+/* アイコンの下に表示される「いいね数」などの数字 */
 .like-count, .count, .action-count {
     font-size: 14px;
     color: #333;
-    margin-top: 4px;
+    margin-top: 4px; /* 上のアイコンとくっつかないように4pxの隙間をあける */
 }
 
 /* =========================================
-   購入ボタン（売り切れ判定込）
-   ========================================= */
+購入ボタン（売り切れ判定込）
+========================================= */
+/* 通常の購入ボタン：ブランドカラーの赤ピンクで、画面幅いっぱいに大きく表示する */
 .btn-purchase {
     display: block;
     background-color: #ff5a5f;
     color: white;
     text-align: center;
-    padding: 15px;
+    padding: 15px; /* 上下にゆったりとした余白をとり、タップしやすい大きなボタンにする */
     text-decoration: none;
     font-weight: bold;
     border-radius: 4px;
-    margin: 10px 0 30px;
+    margin: 10px 0 30px; /* 上に10px、下に30pxの隙間をあけて他の要素と離す */
     border: none;
 }
 
+/* 【重要】商品が売り切れている（is-sold）状態の購入ボタン：グレーにして押せなくする */
 .btn-purchase.is-sold {
-    background-color: #888;
-    cursor: not-allowed;
+    background-color: #888; /* ボタン全体を暗いグレーに変えて、売り切れ状態を直感的に伝える */
+    cursor: not-allowed; /* マウスを乗せた時に「禁止マーク（🚫）」に変え、押せないことを伝える */
 }
 
 /* =========================================
-   セクション共通（説明・情報・コメント）
-   ========================================= */
+セクション共通（説明・情報・コメントのタイトル）
+========================================= */
+/* 「商品の説明」や「コメント」などの見出し：文字を大きく、上下にしっかり余白をとる */
 .section-title {
     font-size: 20px;
     font-weight: bold;
-    margin: 30px 0 10px;
+    margin: 30px 0 10px; /* 上に30px、下に10pxのメリハリのある余白をあける */
     padding-bottom: 5px;
 }
 
+/* 商品の説明文テキスト：読みやすさを一番に整える */
 .detail-description p {
-    line-height: 1.6;
+    line-height: 1.6; /* 行の間隔を1.6倍に広げ、長文でも目が疲れにくくする */
     color: #333;
-    white-space: pre-wrap;
+    white-space: pre-wrap; /* データベースに登録された改行やスペースを、そのまま画面に反映させる重要設定 */
 }
 
-/* カテゴリータグ */
+/* カテゴリータグ：角を丸めたグレーの可愛いバッジ風デザイン */
 .category-tag {
-    display: inline-block;
-    background-color: #ddd;
-    border-radius: 20px;
+    display: inline-block; /* 文字の長さに合わせて自動で横幅が決まるようにする設定 */
+    background-color: #ddd; /* 薄いグレーの背景を敷く */
+    border-radius: 20px; /* 四隅を大幅に丸めて「カプセル型（丸型）」のタグにする */
     padding: 5px 15px;
-    margin-right: 8px;
-    margin-bottom: 8px;
+    margin-right: 8px; /* タグが複数並んだときに、右隣とくっつかないための隙間 */
+    margin-bottom: 8px; /* タグが2行に折り返したときに、下とくっつかないための隙間 */
     font-size: 14px;
 }
 
-/* 商品情報テーブル */
+/* 商品詳細情報（ブランドや商品の状態）を並べるテーブル（表） */
 .info-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: collapse; /* テーブルの枠線同士が重なってズレるのを防ぐ設定 */
 }
 
+/* テーブルの左側見出し（「商品の状態」などの文字）：横幅を全体の30%に固定して左寄せにする */
 .info-table th {
     text-align: left;
     width: 30%;
-    padding: 10px 0;
+    padding: 10px 0; /* 上下に10pxの間隔をあけ、表が見づらく詰まるのを防かせる */
     font-weight: bold;
 }
 
 /* =========================================
-   コメントエリア
-   ========================================= */
+コメントエリア
+========================================= */
+/* 投稿された各コメントのまとまり：下に20pxの隙間をあけて次のコメントと離す */
 .comment-item {
     margin-bottom: 20px;
 }
 
+/* コメントしたユーザーの表示枠：アイコンと名前を綺麗に横並びにする */
 .comment-user {
     display: flex;
-    align-items: center;
+    align-items: center; /* 丸いアイコンとユーザー名の縦の中心をピッタリ揃える */
     margin-bottom: 8px;
 }
 
+/* コメントユーザーの丸いアイコン枠 */
 .user-icon {
     width: 32px;
     height: 32px;
     background-color: #eee;
-    border-radius: 50%;
-    margin-right: 12px;
+    border-radius: 50%; /* 四角い箱を綺麗な「真ん丸」に変形させる設定 */
+    margin-right: 12px; /* 右側にあるユーザー名との間に12pxの空間をあける */
 }
 
+/* ユーザー名：太字にして読みやすくする */
 .user-name {
     font-weight: bold;
 }
 
+/* 吹き出し風のコメント本文：薄グレーの背景を敷き、左側に余白をとる */
 .comment-text {
-    padding-left: 44px; /* アイコンの幅＋余白分ずらす */
+    padding-left: 44px; /* 左上にある丸いアイコンの幅（32px）＋隙間分（12px）を計算し、文字の始まりを綺麗に揃える */
     line-height: 1.5;
-    background-color: #eeeeee;
+    background-color: #eeeeee; /* 薄いグレーの背景を敷いてメッセージボックス風にする */
     padding-top: 15px;
     padding-bottom: 15px;
     padding-right: 15px;
@@ -207,16 +226,17 @@
     margin-top: 10px;
 }
 
-/* コメント入力 */
+/* コメントを入力する大きな白い箱（テキストエリア） */
 .comment-textarea {
-    height: 150px;
+    height: 150px; /* 高さを150pxに固定して、たくさん文字を打てるようにする */
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 10px 0;
-    resize: none;
+    resize: none; /* ユーザーがマウスで入力欄の右下を掴んで、箱のサイズを勝手に変えるのを禁止する設定 */
 }
 
+/* 「コメントを送信する」ボタン：購入ボタンと同じ赤ピンク色で目立たせる */
 .btn-comment-submit {
     display: block;
     background-color: #ff5a5f;
@@ -228,17 +248,21 @@
     cursor: pointer;
 }
 
+/* コメント送信ボタンにマウスが乗った時（ホバー）：少し濃い赤色にして「押せる状態」を伝える */
 .btn-comment-submit:hover {
-    background-color: #e54d52;
+    background-color: #e54d52; /* 0.3秒などの指定がなくても、パッと色が変わる標準的なホバー設定 */
 }
 
 /* =========================================
-   レスポンシブ
-   ========================================= */
+レスポンシブ（スマホ・タブレット対応）
+========================================= */
+/* 画面の横幅が768px以下（一般的なタブレットやスマホサイズ）になった時の限定ルール */
 @media (max-width: 768px) {
+    /* 横並び（画像と詳細テキスト）だったレイアウトを、縦並びにガチャンと切り替える */
     .detail-container {
-        flex-direction: column;
+        flex-direction: column; /* 縦一列（上に画像、下に詳細テキスト）の順番に変更する命令 */
     }
+    /* 画面が狭くなるため、画像の横幅制限を解除して画面いっぱいに広げる */
     .detail-image {
         max-width: 100%;
     }

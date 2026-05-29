@@ -9,10 +9,11 @@ class Order extends Model
 {
     use HasFactory;
 
-    // すべてのカラムの保存を許可する
+    // データーベースにある全ての項目を保存・更新する
     protected $guarded = [];
 
-    // 商品とのリレーション（任意ですがあると便利です）
+    // 商品とオーダーのリレーションの記述がしてあり、
+    // 注文データーから紐づいている商品を取得できるようにする設定
     public function item()
     {
         return $this->belongsTo(Item::class);

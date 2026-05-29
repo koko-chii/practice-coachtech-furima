@@ -1,30 +1,31 @@
-/* 成功メッセージ */
+/* 成功メッセージ：処理が成功したことを伝える、目に優しい「薄緑色」の通知枠 */
 .flash-message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid #c3e6cb;
-    position: relative;
+    background-color: #d4edda; /* 背景を清潔感のある薄緑色にする */
+    color: #155724; /* 文字を読みやすい濃い緑色にし、白背景とのコントラストを保つ */
+    padding: 15px; /* 上下左右に15pxの広い余白をとり、メッセージを中央で目立たせる */
+    text-align: center; /* メッセージの文字を完全に中央寄せにする */
+    border-bottom: 1px solid #c3e6cb; /* 下側にだけ、背景より少し濃い緑色の境界線を1本引く */
+    position: relative; /* 右端に置く「閉じるボタン」の位置を決めるための基準点（親の目印） */
 }
 
-/* エラーメッセージ */
+/* エラーメッセージ：警告やミスを直感的に伝える、警告色の「薄赤（ピンク）色」の通知枠 */
 .flash-error {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #f8d7da; /* 背景を注意を引く薄赤色にする */
+    color: #721c24; /* 文字をハッキリと読める濃い赤（エンジ）色にする */
     padding: 15px;
     text-align: center;
-    border-bottom: 1px solid #f5c6cb;
-    position: relative;
+    border-bottom: 1px solid #f5c6cb; /* 下側にだけ、少し濃い赤色の境界線を1本引く */
+    position: relative; /* 右端に置く「閉じるボタン」の位置を決めるための基準点（親の目印） */
 }
 
-/* 共通の閉じるボタン */
+/* 共通の閉じるボタン：お知らせ枠の右端に浮かせて配置する「×」ボタンのルール */
 .flash-close {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-weight: bold;
+    position: absolute; /* 親要素（通知枠）を基準にして、自由な場所に浮かせて配置する命令 */
+    right: 20px; /* 右端から20pxの内側に入った位置に固定する */
+    top: 15px; /* 上から15px下がった位置に固定する（これで全体の縦中央と綺麗に揃う） */
+    border: none; /* ボタン特有の余計な四角い枠線を消し去る */
+    background: none; /* ボタンの背景色を透明にして、通知枠の緑や赤がそのまま透けるようにする */
+    cursor: pointer; /* マウスが乗った時に「手のマーク（指差し）」に変え、押せることを伝える */
+    font-weight: bold; /* 「×」の文字を太字にして見やすくする */
 }
+

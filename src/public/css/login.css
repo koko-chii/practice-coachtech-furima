@@ -1,52 +1,60 @@
+/* 認証画面（ログイン・会員登録）全体の囲み枠：最大幅を400pxに狭めて縦長にスマートに見せる設定 */
 .auth-container {
     max-width: 400px;
-    margin: 80px auto;
-    padding: 0 20px;
+    margin: 80px auto; /* 上下に80pxの広めの余白をとり、画面のど真ん中に視線が集まるように中央寄せする */
+    padding: 0 20px; /* スマホ画面で見た時に、入力欄が画面の端にぴったり張り付くのを防ぐ隙間 */
 }
 
+/* 画面メインタイトル（「ログイン」や「新規会員登録」の文字）：中央寄せで大きく配置 */
 .auth-title {
     text-align: center;
     font-size: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 40px; /* 下にある最初の入力項目との間に40pxのゆったりとした空間をあける */
 }
 
+/* 各入力項目のブロック（メールアドレスやパスワードごと）：下に20pxの隙間をあけて等間隔に並べる */
 .form-group {
     margin-bottom: 20px;
 }
 
+/* 入力欄のタイトルラベル（「メールアドレス」などの文字）：太字にして入力欄の上に配置 */
 .form-label {
-    display: block;
+    display: block; /* 横幅いっぱいのブロック要素にして、下の入力の箱（input）を確実に下へ並べる設定 */
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* 下にある入力の箱との間に5pxの少しの隙間をあける */
 }
 
+/* 文字を入力する四角い箱（インプット欄）：横幅を揃え、タップしやすい適度な余白をとる */
 .form-input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 10px; /* 箱の内側に10pxの余白をとり、文字を打ちやすく、タップしやすくする */
+    border: 1px solid #ccc; /* 主張しすぎない薄いグレーの枠線を引く */
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box; /* padding（内側の余白）を増やしても、全体の横幅が100%からはみ出ないようにするお守り */
 }
 
+/* ログイン・登録を実行する送信ボタン：横幅いっぱいに広げ、少し濃いめの赤色で一番目立たせる */
 .btn-submit {
     width: 100%;
-    background-color: #ff4d4b;
-    color: #fff;
+    background-color: #ff4d4b; /* ボタン全体をパッと目を引く鮮やかな赤色にする */
+    color: #fff; /* 中の文字を白にして、ハッキリと読みやすくする */
     border: none;
-    padding: 12px;
+    padding: 12px; /* 上下に12pxの余白をとり、親指で押しやすい適度な太さのボタンにする */
     border-radius: 4px;
     font-weight: bold;
-    cursor: pointer;
+    cursor: pointer; /* マウスが乗った時に「指差しマーク」に変えて押せることを伝える */
 }
 
+/* 認証画面の下部エリア（「アカウントをお持ちでない方はこちら」などのリンク）：文字を中央に寄せる */
 .auth-footer {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 20px; /* 上の送信ボタンとくっつかないように20pxの空間をあける */
 }
 
+/* 入力内容が間違っていたり、パスワードが違ったりした時に、入力欄のすぐ下に出るエラーメッセージ */
 .error-message {
-    color: #ff4d4b;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
+    color: #ff4d4b; /* 警告を伝えるために、文字色をボタンと同じ赤色にする */
+    font-size: 12px; /* 通常の文字より少し小さくして、すっきりと下に収める */
+    margin-top: 5px; /* 上の入力欄（input）とくっつかないように5pxの隙間をあける */
+    display: block; /* 横幅いっぱいに広げて独立させ、他の要素と重なるバグを防ぐ設定 */
 }

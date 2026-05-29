@@ -9,6 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    //会員登録時の情報から4項目を後から追加するための設定
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
@@ -22,6 +24,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+
+    //追加の4項目を取り消す必要がある場合の設定
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {

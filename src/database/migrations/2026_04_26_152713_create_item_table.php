@@ -4,11 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+//laravelの新しい仕様で重複エラー防止のためクラス名は定義せず直接returnで記述してある
 return new class extends Migration
 {
     /**
      * Run the migrations.
      */
+    //商品情報を保存するための項目をデーターベース内に作成する設計図
     public function up(): void
     {
         Schema::create('items', function (Blueprint $table) {
@@ -28,6 +30,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+
+    //itemテーブルが存在したら設計図を取消しデーターベースを元に戻すための記述
     public function down(): void
     {
         Schema::dropIfExists('items');

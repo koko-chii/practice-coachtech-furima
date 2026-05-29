@@ -65,9 +65,12 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($throttleKey);
         });
 
+               // 2段階認証（two-factor）のログインを試みる回数を制限するセキュリティ設定
         RateLimiter::for('two-factor', function (Request $request) {
+            // ログインしようとしているユーザー（セッションのlogin.id）ごとに、1分間に「5回まで」に制限する
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-    }
-}
+    } // ➔ boot関数の終わり
+} // ➔ FortifyServiceProviderクラスの終わり
+

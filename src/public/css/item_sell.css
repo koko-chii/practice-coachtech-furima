@@ -1,154 +1,161 @@
-/* 全体コンテナ */
+/* 出品画面全体コンテナ：画面の中央にスッキリと収まるように最大幅を600pxに制限 */
 .sell-container {
     max-width: 600px;
-    margin: 40px auto;
-    padding: 0 20px;
+    margin: 40px auto; /* 上下に40pxの余白をあけ、左右は自動で中央寄せにする */
+    padding: 0 20px; /* スマホ画面で見た時に、左右が端に張り付くのを防ぐ隙間 */
     color: #333;
     font-family: "Noto Sans JP", sans-serif;
 }
 
+/* ページメインタイトル（「商品の出品」などの文字）：中央寄せで大きく太字にする */
 .sell-title {
     text-align: center;
     font-size: 28px;
-    margin-bottom: 50px;
+    margin-bottom: 50px; /* 下の要素としっかり距離をとってメリハリをつける */
     font-weight: bold;
 }
 
+/* 各セクションの見出し（「商品の詳細」など）：薄いグレーの境界線で区切って整理する */
 .sell-section-title {
     font-size: 18px;
     font-weight: bold;
-    color: #666;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 12px;
-    margin-bottom: 30px;
-    margin-top: 50px;
+    color: #666; /* 少し薄めのグレーにして主役の入力欄を引き立てる */
+    border-bottom: 1px solid #ccc; /* 下側にだけうっすらと区切り線を1本引く */
+    padding-bottom: 12px; /* 線と文字がくっつかないための隙間 */
+    margin-bottom: 30px; /* 下の入力エリアとの間の空間 */
+    margin-top: 50px; /* 上のセクションとくっつかないように広めの空間をあける */
 }
 
+/* 入力項目のタイトルラベル（「商品名」などの文字）：太字にして入力欄の上に配置 */
 .form-label {
-    display: block;
+    display: block; /* 横幅いっぱいのブロック要素にして、次の入力欄を強制的に下に並べる */
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 8px; /* 下の入力の箱との間に8pxの少しの隙間をあける */
     font-size: 16px;
 }
 
-/* 本物のファイル入力ボタンを隠す */
+/* 【重要】ブラウザ標準の不細工なファイル選択ボタン（「ファイルを選択」というグレーのボタン）を画面上から完全に隠す設定 */
 .file-input {
-    display: none;
+    display: none; /* 存在はしているけれど、見えなくしてデザインの邪魔をさせない */
 }
 
-/* 商品画像アップロードエリア（点線の枠） */
+/* 商品画像アップロードエリア：点線の枠で囲まれた、いかにも「ここに画像を置く」と分かるドラッグエリア */
 .form-group-image {
-    border: 1px dashed #ccc;
-    padding: 60px 20px;
-    text-align: center;
+    border: 1px dashed #ccc; /* 枠線を「 dashed（点線）」にして、アップロード場所であることを視覚的に伝える */
+    padding: 60px 20px; /* 上下に60pxの広い余白をとり、大きな画像をドロップしやすくする */
+    text-align: center; /* 中にある「画像を選択する」ボタンを中央に寄せる */
     border-radius: 4px;
     background-color: #fff;
     margin-bottom: 10px;
 }
 
-/* 画像を選択するボタン */
+/* 画像を選択するボタン：本物のボタンを隠した代わりに、ユーザーが実際にポチッと押すためのおしゃれな偽物ボタン */
 .image-select-label {
-    display: inline-block;
+    display: inline-block; /* ボタンらしい四角い形として扱えるようにする設定 */
     padding: 10px 25px;
-    border: 1px solid #ff5a5f;
+    border: 1px solid #ff5a5f; /* ブランドカラーの赤ピンクで線を引く */
     border-radius: 4px;
     color: #ff5a5f;
-    cursor: pointer;
+    cursor: pointer; /* マウスが乗った時に「指差しマーク」に変えて押せることを伝える */
     background: #fff;
     font-weight: bold;
-    transition: 0.3s;
+    transition: 0.3s; /* マウスが乗った時、0.3秒かけて滑らかに色を変える演出 */
 }
 
-/* カテゴリー（タグ形式） */
+/* カテゴリー（タグ形式）の並び方：たくさんのタグを横一列に並べ、画面端まできたら自動で折り返させる */
 .category-group {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: wrap; /* 横幅が足りなくなったら、2行目、3行目へと自動で下に回り込ませる魔法の命令 */
+    gap: 12px; /* タグ同士の縦横の隙間を12pxに一定に保つ */
     margin-bottom: 10px;
 }
 
+/* 各カテゴリータグの初期状態：丸みを帯びた薄ピンクの可愛いカプセル型デザイン */
 .category-label {
     display: inline-block;
     padding: 8px 20px;
-    border: 1px solid #ffb2b5;
-    border-radius: 25px;
+    border: 1px solid #ffb2b5; /* 主張しすぎない薄いピンクの線を引く */
+    border-radius: 25px; /* 四隅を大幅に丸めて「カプセル型」の形にする */
     color: #ff5a5f;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.2s;
+    transition: all 0.2s; /* 選択された時に0.2秒でフワッと色を切り替える演出 */
 }
 
+/* タグの中に隠されている本物のチェックボックス（□マーク）を画面上から完全に消し去る */
 .category-label input[type="checkbox"] {
     display: none;
 }
 
+/* 【最新の大技】このタグが選択（チェック）された瞬間に、タグ全体の背景色と文字色をブランドカラーに反転させる魔法の設定 */
 .category-label:has(input:checked) {
-    background-color: #ff5a5f;
-    color: #fff;
-    border-color: #ff5a5f;
+    background-color: #ff5a5f; /* 背景を鮮やかな赤ピンクにする */
+    color: #fff; /* 文字を白にして読みやすくする */
+    border-color: #ff5a5f; /* 枠線の色も赤ピンクに揃える */
 }
 
-/* 入力フィールド全般（商品名、商品の状態セレクト、説明） */
+/* 入力フィールド全般（商品名、商品の状態セレクト、説明）：横幅を揃え、タップしやすい広めの余白をとる */
 .form-input, .form-select, .form-textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box; /* padding（内側の余白）を増やしても、全体の横幅が100%からはみ出ないようにするお守り */
     font-size: 16px;
     background-color: #fff;
 }
 
+/* 商品説明の入力エリア：高さを150pxに広げ、サイズ変更を禁止する */
 .form-textarea {
     height: 150px;
-    resize: none;
+    resize: none; /* ユーザーがマウスで入力欄を勝手に広げて、周りのレイアウトを破壊するのを防ぐ安全設定 */
 }
 
-/* ★販売価格（枠線の中に ¥ マークと数値入力欄を入れる） */
+/* ★販売価格のコンテナ：枠線の中に「¥」マークと「数値入力欄」を綺麗に同居させるための見えない外枠 */
 .price-input-container {
     display: flex;
-    align-items: center;
-    border: 1px solid #ccc; /* 外側の枠線 */
+    align-items: center; /* 「¥」マークと数字の縦の中心をピッタリ揃える */
+    border: 1px solid #ccc; /* あたかもこれが「入力欄の枠線」であるかのように見せる外枠 */
     border-radius: 4px;
-    padding: 0 12px;
+    padding: 0 12px; /* 左右に12pxの隙間をあけて、「¥」マークが左端にくっつくのを防ぐ */
     background-color: #fff;
     margin-top: 5px;
 }
 
+/* 金額の左側に固定表示されている「¥」マークの見た目 */
 .price-symbol {
     font-size: 18px;
     font-weight: bold;
     color: #333;
-    margin-right: 10px;
+    margin-right: 10px; /* 右隣の数字入力欄との間に10pxの隙間をあける */
 }
 
-/* 数値入力欄本体：枠線を消して外枠と一体化 */
+/* 数値入力欄本体：本物の枠線をすべて消し去り、あたかも上のコンテナと一体化しているように見せる特殊設定 */
 .price-field {
-    flex: 1;
-    border: none !important;
-    outline: none;           /* クリック時の青い光を消す */
-    padding: 12px 0;
+    flex: 1; /* 残りの横幅をすべてこの入力欄が使い切るように広げる設定 */
+    border: none !important; /* 本物の入力欄の四角い線を「何が何でも（!important）」消し去る */
+    outline: none; /* 入力欄をクリックした時に、ブラウザが勝手につける青い光の線を消してデザインを保つ */
+    padding: 12px 0; /* 上下に12pxの余白をとり、コンテナ全体の高さと合わせる */
     font-size: 16px;
-    background: transparent;
+    background: transparent; /* 背景を透明（スケルトン）にして、外枠の白に馴染ませる */
 }
 
-/* Chrome, Safari, Edge, Opera の矢印を消す */
+/* 【プロの技】Google ChromeやSafariなどで、金額入力欄（number型）の右端に勝手に出てくる「上下の▲▼矢印（スピンボタン）」を完全に消し去る設定 */
 .price-field::-webkit-outer-spin-button,
 .price-field::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    -webkit-appearance: none; /* ブラウザ標準の矢印の見た目を破棄する */
+    margin: 0; /* 余計な隙間をゼロにする */
 }
 
-/* Firefox の矢印を消す */
+/* 【プロの技】Firefoxブラウザでも、同じように金額入力欄の「上下の▲▼矢印」を非表示にするための保険設定 */
 .price-field[type=number] {
-    -moz-appearance: textfield;
+    -moz-appearance: textfield; /* 矢印を消して、普通のテキスト入力欄と同じ見た目に変形させる */
 }
 
-
-/* 出品ボタン */
+/* 画面の一番下にある「出品する」ボタン：横幅いっぱいの大きな赤ピンクのボタン */
 .sell-btn {
     width: 100%;
-    padding: 18px;
+    padding: 18px; /* 上下に18pxの広い余白をとり、親指でタップしやすい存在感のあるボタンにする */
     background-color: #ff5a5f;
     color: white;
     border: none;
@@ -156,13 +163,13 @@
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 60px;
+    margin-top: 60px; /* 上の入力欄とくっつかないように、60pxの広い空間をあけて独立させる */
 }
 
-/* エラーメッセージ */
+/* 入力内容が間違っていた時（未入力など）に、画面の上に現れるエラーメッセージの箇条書きリスト */
 .error-list {
-    color: #ff5a5f;
-    list-style: none;
+    color: #ff5a5f; /* 警告を伝えるために文字色を赤ピンクにする */
+    list-style: none; /* 箇条書きの「・」の点を消し去る */
     padding: 0;
     margin-bottom: 20px;
 }
