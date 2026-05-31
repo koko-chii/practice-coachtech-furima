@@ -4,13 +4,21 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
+    //プロフィールはweb.phpでログイン認証やメール認証を通過しているので
+    // ここで二重の権限はせず無条件で誰でも通過する
     public function authorize(): bool
     {
         return true;
     }
 
+    //プロフィール登録や更新は、安全性や利便性を両立させたルール設定
+    // 画像は空欄でもよいが送信された場合はデータ形式jpeg,png
+    //名前入力必須、文字列で20字以内
+    //郵便番号必須、数字のハイフンありで3字-4字
+    //住所は文字列で入力必須
+    //建物名は空欄でもよいが入力がある場合は文字列
     public function rules(): array
     {
         return [

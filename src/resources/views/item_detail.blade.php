@@ -72,19 +72,27 @@
             </table>
         </div>
 
-        {{-- コメント一覧 --}}
+                {{-- コメント一覧表示ブロック --}}
         <div class="detail-comments">
+            {{-- 【リレーション】この商品（item）に紐づいているコメントデータを数えて（count）件数を動的に表示 --}}
             <h2 class="section-title">コメント({{ $item->comments->count() }})</h2>
+            
+            {{-- この商品に投稿されたすべてのコメント（$item->comments）を、上から順に1件ずつ取り出してループ表示 --}}
             @foreach($item->comments as $comment)
                 <div class="comment-item">
+                    {{-- コメントしたユーザーのプロフィール（画像・名前）エリア --}}
                     <div class="comment-user">
                         <div class="user-icon">
+                            {{-- 【2段階リレーション】コメント（comment）から、それを書いたユーザー（user）の画像パス（img_url）を芋づる式に取得 --}}
+                            {{-- もしユーザーがプロフィール画像を登録していた（img_urlが空ではない）場合だけ表示する --}}
                             @if($comment->user->img_url)
                                 <img src="{{ asset('storage/' . $comment->user->img_url) }}" alt="ユーザー画像" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                             @endif
                         </div>
+                        {{-- 【2段階リレーション】同じくコメントに紐づくユーザーの「名前（name）」を動的に表示 --}}
                         <span class="user-name">{{ $comment->user->name }}</span>
                     </div>
+                    {{-- 実際に書き込まれたコメントの本文テキストを表示 --}}
                     <div class="comment-text">
                         {{ $comment->comment }}
                     </div>
@@ -92,18 +100,28 @@
             @endforeach
         </div>
 
-        {{-- コメント入力欄 --}}
+        {{-- コメント入力欄セクション --}}
         <div class="comment-form-section">
             <h2 class="section-title">商品へのコメント</h2>
+            
+            {{-- 【状態の検知】もしこの商品の売切フラグ（is_sold）が真（true / 1）だった場合 --}}
             @if($item->is_sold)
+                {{-- トラブルや混乱を防ぐために、コメントの入力欄自体を完全に隠し、警告文だけを画面に表示する --}}
                 <p style="color: #ff5a5f; font-weight: bold;">※この商品は売り切れているため、コメントできません。</p>
+            {{-- 商品がまだ売れていない（販売中）の場合だけ、以下の入力フォームを表示する --}}
             @else
+                {{-- コメント保存処理を行うURL（route）へ、どの商品に対するコメントかの情報（item_id）を添えてPOST通信で送信するフォーム --}}
                 <form action="{{ route('comment.store', ['item_id' => $item->id]) }}" method="POST">
+                    {{-- 【セキュリティ】なりすまし攻撃（CSRF）を防ぐための、Laravel必須の暗号化トークン自動発行必須マーク --}}
                     @csrf
+                    {{-- コメントを入力する大きなテキストエリア。ブラウザ側での未入力送信を防ぐため「required」を設定 --}}
                     <textarea name="comment" class="comment-textarea" required></textarea>
+                    
+                    {{-- もし入力チェック（バリデーション）で文字数制限などのミスがあった場合だけ、エラーメッセージを真下に表示 --}}
                     @error('comment')
                         <p class="error-message">{{ $message }}</p>
                     @enderror
+                    {{-- コメント送信確定ボタン --}}
                     <button type="submit" class="btn-comment-submit">コメントを送信する</button>
                 </form>
             @endif
@@ -111,5 +129,6 @@
     </div>
 </div>
 
+{{-- いいねボタン（ハート）を押した時に、画面をリロードせずに裏側でデータを切り替えるためのJavaScriptファイルを読み込み --}}
 <script src="{{ asset('js/like.js') }}"></script>
 @endsection

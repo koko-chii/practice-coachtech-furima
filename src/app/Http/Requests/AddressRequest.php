@@ -2,36 +2,32 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
+//laravelが用意したバリデーションチェックのファイルの住所venderの奥深くにある
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddressRequest extends FormRequest
 {
-    /**
-     * ユーザーがこのリクエストを行う権限があるかどうかを判断
-     */
+    //このひと塊は配送先住所変更のデータが送られてきた場合の権限をチェックし、
+    //ログイン認証済みユーザーの画面のため、全員が変更可能となっている
     public function authorize(): bool
     {
-        // ログイン中のユーザーのみ許可するため、true に変更します
         return true;
     }
 
-    /**
-     * リクエストに適用するバリデーションルールを定義
-     */
+    //このひと塊はバリデーションルールを設定しており
+    // チェックをクリアしたデータは次のデーター保存にすすむ
     public function rules(): array
     {
         return [
-            // 郵便番号：入力必須、かつ「数字3桁 - 数字4桁」の合計8文字を正規表現でチェック
+            // 郵便番号は入力必須かつ「数字3桁 - 数字4桁」の合計8文字のバリデーション
             'postcode' => ['required', 'string', 'regex:/^\d{3}-\d{4}$/'],
-            // 住所：入力必須
+            // 住所は入力必須
             'address'  => ['required', 'string'],
         ];
     }
 
-    /**
-     * エラーメッセージの日本語化定義
-     */
+    //バリデーションチェックに通過できないデータは以下のエラーメッセージを
+    // 日本語で表示する指定をしている
     public function messages(): array
     {
         return [

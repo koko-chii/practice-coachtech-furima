@@ -11,6 +11,8 @@ class CommentRequest extends FormRequest
         return true;
     }
 
+    //コメントは空欄での送信はできす、文字列で255文字以内というルールが
+    // データーベースに保存されるまえにチェックされている
     public function rules(): array
     {
         return [
@@ -18,6 +20,7 @@ class CommentRequest extends FormRequest
         ];
     }
 
+    //エラーの場合、日本語でメッセージを表示させる設定
     public function messages(): array
     {
         return [
